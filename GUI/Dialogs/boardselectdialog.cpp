@@ -380,7 +380,8 @@ BoardSelectDialog::BoardSelectDialog(QWidget *parent) :
     parser(nullptr),
     controlWindow(nullptr),
     useOpenCL(true),
-    playbackPorts(255)
+    playbackPorts(255),
+    useFpgaPipeline(false)
 {
     // Information used by QSettings to save basic settings across sessions.
     QCoreApplication::setOrganizationName(OrganizationName);
@@ -503,7 +504,7 @@ void BoardSelectDialog::showDemoMessageBox()
     bool rememberSettings = false;
 
     DemoSelections demoSelection;
-    DemoDialog demoDialog(&demoSelection, useOpenCL, playbackPorts, this);
+    DemoDialog demoDialog(&demoSelection, useOpenCL, playbackPorts, useFpgaPipeline, this);
     demoDialog.exec();
 
     if (demoSelection == DemoPlayback) {

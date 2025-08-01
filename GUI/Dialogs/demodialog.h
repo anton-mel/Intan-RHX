@@ -41,7 +41,7 @@ class DemoDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit DemoDialog(DemoSelections *demoSelection_, bool &useOpenCL_, uint8_t &playbackPorts_, QWidget *parent = nullptr);
+    explicit DemoDialog(DemoSelections *demoSelection_, bool &useOpenCL_, uint8_t &playbackPorts_, bool &useFpgaPipeline_, QWidget *parent = nullptr);
 
 protected:
     void closeEvent(QCloseEvent *) override;
@@ -51,12 +51,14 @@ private:
 
     bool *useOpenCL;
     uint8_t *playbackPorts;
+    bool *useFpgaPipeline;
     QLabel *message;
     QPushButton *usbInterfaceButton;
     QPushButton *recordControllerButton;
     QPushButton *stimControllerButton;
     QPushButton *playbackButton;
     QPushButton *advancedButton;
+    QCheckBox *fpgaPipelineCheckBox;
 
 private slots:
     void usbInterface();

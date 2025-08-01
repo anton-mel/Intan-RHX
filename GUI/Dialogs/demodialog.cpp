@@ -31,16 +31,18 @@
 #include "demodialog.h"
 #include "advancedstartupdialog.h"
 
-DemoDialog::DemoDialog(DemoSelections *demoSelection_, bool &useOpenCL_, uint8_t &playbackPorts_, QWidget *parent) :
+DemoDialog::DemoDialog(DemoSelections *demoSelection_, bool &useOpenCL_, uint8_t &playbackPorts_, bool &useFpgaPipeline_, QWidget *parent) :
     QDialog(parent),
     demoSelection(demoSelection_),
     useOpenCL(&useOpenCL_),
     playbackPorts(&playbackPorts_),
+    useFpgaPipeline(&useFpgaPipeline_),
     message(nullptr),
     usbInterfaceButton(nullptr),
     recordControllerButton(nullptr),
     stimControllerButton(nullptr),
-    playbackButton(nullptr)
+    playbackButton(nullptr),
+    fpgaPipelineCheckBox(nullptr)
 {
     message = new QLabel(tr("No Intan controllers have been detected. Ensure devices are powered on and connected to this machine.\n"
                             "You may also run this software in demonstration mode or play back a saved data file."));
@@ -68,6 +70,10 @@ DemoDialog::DemoDialog(DemoSelections *demoSelection_, bool &useOpenCL_, uint8_t
     connect(playbackButton, SIGNAL(clicked(bool)), this, SLOT(playback()));
     connect(advancedButton, SIGNAL(clicked(bool)), this, SLOT(advanced()));
 
+    // Create FPGA Pipeline checkbox
+    fpgaPipelineCheckBox = new QCheckBox(tr("Enable FPGA Pipeline"), this);
+    fpgaPipelineCheckBox->setChecked(*useFpgaPipeline);
+
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(message);
     mainLayout->addWidget(usbInterfaceButton);
@@ -75,6 +81,8 @@ DemoDialog::DemoDialog(DemoSelections *demoSelection_, bool &useOpenCL_, uint8_t
     mainLayout->addWidget(stimControllerButton);
     mainLayout->addSpacing(8);
     mainLayout->addWidget(playbackButton);
+    mainLayout->addSpacing(8);
+    mainLayout->addWidget(fpgaPipelineCheckBox);
     mainLayout->addSpacing(8);
     mainLayout->addWidget(advancedButton);
 
@@ -95,24 +103,28 @@ void DemoDialog::closeEvent(QCloseEvent *)
 void DemoDialog::usbInterface()
 {
     *demoSelection = DemoUSBInterfaceBoard;
+    *useFpgaPipeline = fpgaPipelineCheckBox->isChecked();
     accept();
 }
 
 void DemoDialog::recordController()
 {
     *demoSelection = DemoRecordingController;
+    *useFpgaPipeline = fpgaPipelineCheckBox->isChecked();
     accept();
 }
 
 void DemoDialog::stimController()
 {
     *demoSelection = DemoStimRecordController;
+    *useFpgaPipeline = fpgaPipelineCheckBox->isChecked();
     accept();
 }
 
 void DemoDialog::playback()
 {
     *demoSelection = DemoPlayback;
+    *useFpgaPipeline = fpgaPipelineCheckBox->isChecked();
     accept();
 }
 

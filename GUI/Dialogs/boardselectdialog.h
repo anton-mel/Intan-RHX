@@ -145,6 +145,7 @@ private:
 
     bool useOpenCL;
     uint8_t playbackPorts;
+    bool useFpgaPipeline;
 };
 
 #endif // BOARDSELECTDIALOG_H
