@@ -36,3 +36,4 @@ libokFrontPanel.dylib should be in a directory called "Frameworks" alongside the
 ### Linux:
 
 A udev rules file should be added so that the Intan hardware can communicate via USB. The 60-opalkelly.rules file should be copied to /etc/udev/rules.d/, after which the system should be restarted or the command 'udevadm control --reload-rules' should be run. libokFrontPanel.so should be in the same directory as the binary executable at runtime. 
+# Rohan
