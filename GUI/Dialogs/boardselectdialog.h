@@ -38,6 +38,7 @@
 #include "rhxcontroller.h"
 #include "syntheticrhxcontroller.h"
 #include "playbackrhxcontroller.h"
+#include "pipelinedatarhxcontroller.h"
 #include "rhxglobals.h"
 #include "controlwindow.h"
 #include "controllerinterface.h"

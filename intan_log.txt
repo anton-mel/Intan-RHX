@@ -1,0 +1,20 @@
+---- Intan Technologies ----
+
+FrontPanel DLL loaded. Version:  5.3.4
+Scanning USB for Opal Kelly devices...
+Found 1 Opal Kelly device connected.
+Pipeline controller selected - forcing demo mode even with devices connected
+Pipeline controller selected - showing advanced configuration first
+2025-08-13 11:19:15.349 IntanRHX[75782:14482200] +[IMKClient subclass]: chose IMKClient_Modern
+2025-08-13 11:19:15.349 IntanRHX[75782:14482200] +[IMKInputSession subclass]: chose IMKInputSession_Modern
+Saving pipeline controller setting: true
+Settings file location: "/Users/antonmelnychuk/Library/Preferences/com.intantech.IntanRHX.plist"
+Starting software with pipeline controller after configuration...
+Pipeline controller setting: true
+Settings file location: "/Users/antonmelnychuk/Library/Preferences/com.intantech.IntanRHX.plist"
+Creating PipelineDataRHXController
+RHXController: Allocating 16.2857 MBytes for USB buffer.
+PipelineDataRHXController created - no custom data source set initially
+Default data rate: 30000 Hz, Streams: 4 Channels per stream: 32
+PipelineDataRHXController::isPlayback() called - returning false
+PipelineDataRHXController::acquisitionMode() called - returning SyntheticMode

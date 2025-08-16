@@ -1,0 +1,20 @@
+CXX = g++
+CXXFLAGS = -std=c++11 -I. -I/opt/homebrew/Cellar/qt/6.9.1/lib/QtCore.framework/Versions/A/Headers -I/opt/homebrew/Cellar/qt/6.9.1/lib/QtNetwork.framework/Versions/A/Headers
+LDFLAGS = -F/opt/homebrew/Cellar/qt/6.9.1/lib -framework QtCore -framework QtNetwork
+
+SOURCES = test_pipeline_simple.cpp
+OBJECTS = $(SOURCES:.cpp=.o)
+TARGET = test_pipeline
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CXX) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJECTS) $(TARGET)
+
+.PHONY: all clean

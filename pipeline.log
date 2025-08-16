@@ -1,0 +1,10 @@
+=== Intan Data Pipeline Bridge (macOS) ===
+This program reads data from Intan device and forwards it to Intan RHX app
+NOTE: Currently using simulated data for testing
+Created named pipe: /tmp/intan_data_pipe
+Waiting for Intan RHX app to connect...
+Pipe connected! Starting data generation...
+Generating simulated Intan data at 100 Hz
+Data format: 32 channels, 128 samples per block
+Pipeline bridge running. Press Ctrl+C to stop.
+Data forwarding thread started

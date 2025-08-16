@@ -30,6 +30,7 @@ SOURCES += main.cpp \
     Engine/API/Synthetic/randomnumber.cpp \
     Engine/API/Synthetic/synthdatablockgenerator.cpp \
     Engine/API/Synthetic/syntheticrhxcontroller.cpp \
+    Engine/API/Synthetic/pipelinedatarhxcontroller.cpp \
     Engine/API/Abstract/abstractrhxcontroller.cpp \
     Engine/API/Hardware/rhxcontroller.cpp \
     Engine/API/Hardware/rhxdatablock.cpp \

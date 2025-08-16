@@ -92,6 +92,10 @@ public:
 
     void initialize();
 
+    // Method to set WaveformFifo for pipeline controllers
+    virtual void setWaveformFifo(class WaveformFifo* fifo) { waveformFifo = fifo; }
+    class WaveformFifo* getWaveformFifo() const { return waveformFifo; }
+
     static int maxNumDataStreams(ControllerType type_);
     int maxNumDataStreams() const;
 
@@ -247,6 +251,9 @@ protected:
     virtual void forceAllDataStreamsOff() = 0;
 
     int pipeReadErrorCode;
+
+    // WaveformFifo access for pipeline controllers
+    class WaveformFifo* waveformFifo;
 
 private:
     static bool approximatelyEqual(double a, double b, double percentTolerance);

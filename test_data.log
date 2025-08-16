@@ -1,0 +1,4 @@
+=== Test Data Generator for Intan Pipeline ===
+This program generates simulated Intan data for testing
+Created named pipe: /tmp/intan_data_pipe
+Waiting for Intan RHX app to connect...

@@ -23,6 +23,7 @@ private slots:
     void changeUseOpenCL(bool use);
     void changeSynthMaxChannels(bool max);
     void changeTestMode(bool test);
+    void changePipelineDataController(bool use);
 
 private:
     void updateUIForTestMode();
@@ -32,6 +33,9 @@ private:
 
     QLabel *synthMaxChannelsDescription;
     QCheckBox *synthMaxChannelsCheckBox;
+
+    QLabel *pipelineDataControllerDescription;
+    QCheckBox *pipelineDataControllerCheckBox;
 
     QLabel *playbackControlDescription;
     QCheckBox *playbackACheckBox;
@@ -50,11 +54,13 @@ private:
 
     QGroupBox *playbackControlGroupBox;
     QGroupBox *synthMaxChannelsGroupBox;
+    QGroupBox *pipelineDataControllerGroupBox;
 
     bool *useOpenCL;
     bool tempUseOpenCL;
 
     bool tempSynthMaxChannels;
+    bool tempPipelineDataController;
     bool tempTest;
 
     QVector<bool> portsBool;

@@ -112,6 +112,9 @@ ControllerInterface::ControllerInterface(SystemState* state_, AbstractRHXControl
         outOfMemoryError(memoryRequired);
     }
 
+    // Set WaveformFifo in the controller for pipeline controllers
+    rhxController->setWaveformFifo(waveformFifo);
+
     waveformProcessorThread = new WaveformProcessorThread(state, rhxController->getNumEnabledDataStreams(), rhxController->getSampleRate(), usbStreamFifo, waveformFifo, xpuController, this);
     connect(waveformProcessorThread, SIGNAL(finished()), waveformProcessorThread, SLOT(deleteLater()));
     connect(waveformProcessorThread, SIGNAL(cpuLoadPercent(double)), this, SLOT(updateWaveformProcessorCpuLoad(double)));

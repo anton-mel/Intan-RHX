@@ -7,6 +7,8 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
     useOpenCLCheckBox(nullptr),
     synthMaxChannelsDescription(nullptr),
     synthMaxChannelsCheckBox(nullptr),
+    pipelineDataControllerDescription(nullptr),
+    pipelineDataControllerCheckBox(nullptr),
     playbackControlDescription(nullptr),
     playbackACheckBox(nullptr),
     playbackBCheckBox(nullptr),
@@ -19,6 +21,8 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
     buttonBox(nullptr),
     useOpenCL(&useOpenCL_),
     tempUseOpenCL(useOpenCL_),
+    tempSynthMaxChannels(false),
+    tempPipelineDataController(false),
     tempTest(false),
     playbackPorts(&playbackPorts_),
     demoMode(demoMode_)
@@ -37,6 +41,16 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
     useOpenCLCheckBox = new QCheckBox(tr("Use OpenCL"), this);
     useOpenCLCheckBox->setChecked(useOpenCL_);
     connect(useOpenCLCheckBox, SIGNAL(clicked(bool)), this, SLOT(changeUseOpenCL(bool)));
+
+    pipelineDataControllerDescription = new QLabel(tr(
+        "Pipeline Data Controller allows you to bypass Intan hardware and inject\n"
+        "external data directly into the Intan RHX application. This enables you\n"
+        "to use the powerful visualization and analysis tools with data from any\n"
+        "source (files, network, sensors, etc.) instead of generating synthetic data."), this);
+
+    pipelineDataControllerCheckBox = new QCheckBox(tr("Use Pipeline Data Controller"), this);
+    pipelineDataControllerCheckBox->setChecked(false);
+    connect(pipelineDataControllerCheckBox, SIGNAL(clicked(bool)), this, SLOT(changePipelineDataController(bool)));
 
     playbackControlDescription = new QLabel(tr(
         "If running in playback mode, the RHX software will attempt to read\n"
@@ -85,6 +99,10 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
     synthMaxChannelsCheckBox->setChecked(settings.value("synthMaxChannels", false).toBool());
     connect(synthMaxChannelsCheckBox, SIGNAL(clicked(bool)), this, SLOT(changeSynthMaxChannels(bool)));
 
+    // Load saved pipeline controller setting
+    tempPipelineDataController = settings.value("rhxPipelineDataController", true).toBool();
+    pipelineDataControllerCheckBox->setChecked(tempPipelineDataController);
+
     if (settings.value("chipTestMode", "").toString() == "Intan Chip Test Mode") {
         tempTest = true;
         testModeCheckBox->setChecked(true);
@@ -101,6 +119,13 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
 
     QGroupBox *openCLGroupBox = new QGroupBox(tr("OpenCL"), this);
     openCLGroupBox->setLayout(openCLLayout);
+
+    QVBoxLayout *pipelineDataControllerLayout = new QVBoxLayout;
+    pipelineDataControllerLayout->addWidget(pipelineDataControllerDescription);
+    pipelineDataControllerLayout->addWidget(pipelineDataControllerCheckBox);
+
+    pipelineDataControllerGroupBox = new QGroupBox(tr("Pipeline Data Controller"), this);
+    pipelineDataControllerGroupBox->setLayout(pipelineDataControllerLayout);
 
     QVBoxLayout *playbackControlLayout = new QVBoxLayout;
     playbackControlLayout->addWidget(playbackControlDescription);
@@ -137,6 +162,7 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(openCLGroupBox);
+    mainLayout->addWidget(pipelineDataControllerGroupBox);
     mainLayout->addWidget(playbackControlGroupBox);
     mainLayout->addWidget(synthMaxChannelsGroupBox);
     mainLayout->addWidget(testModeGroupBox);
@@ -197,26 +223,41 @@ void AdvancedStartupDialog::changeTestMode(bool test)
     updateUIForTestMode();
 }
 
+void AdvancedStartupDialog::changePipelineDataController(bool use)
+{
+    tempPipelineDataController = use;
+}
+
 void AdvancedStartupDialog::updateUIForTestMode()
 {
     bool testModeSelected = testModeCheckBox->isChecked() && !demoMode;
 
     playbackControlGroupBox->setDisabled(testModeSelected);
     synthMaxChannelsGroupBox->setDisabled(testModeSelected);
+    pipelineDataControllerGroupBox->setDisabled(testModeSelected);
 
     QPalette palette;
     palette.setColor(QPalette::WindowText, testModeSelected ? Qt::gray : Qt::black);
     playbackControlGroupBox->setPalette(palette);
     synthMaxChannelsGroupBox->setPalette(palette);
+    pipelineDataControllerGroupBox->setPalette(palette);
 }
 
 void AdvancedStartupDialog::accept()
 {
     QSettings settings;
     settings.setValue("synthMaxChannels", tempSynthMaxChannels);
+    settings.setValue("rhxPipelineDataController", tempPipelineDataController);
     QString testModeString = tempTest ? "Intan Chip Test Mode" : "";
     settings.setValue("chipTestMode", testModeString);
     settings.setValue("rhxUseOpenCL", tempUseOpenCL);
+
+    // Debug output
+    qDebug() << "Saving pipeline controller setting:" << tempPipelineDataController;
+    qDebug() << "Settings file location:" << settings.fileName();
+
+    // Ensure settings are immediately written to disk
+    settings.sync();
 
     *useOpenCL = tempUseOpenCL;
 

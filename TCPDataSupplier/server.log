@@ -1,0 +1,6 @@
+=== Intan RHX TCP Synthetic Data Server ===
+This server generates the same synthetic data as SynthDataBlockGenerator
+and sends it over TCP for the PipelineDataRHXController to receive.
+===========================================
+TCP Synthetic Data Server listening on port 12345
+Waiting for Intan RHX client connection...

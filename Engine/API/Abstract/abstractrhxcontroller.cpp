@@ -59,7 +59,8 @@ bool operator >(const StreamChannelPair& a, const StreamChannelPair& b)
 AbstractRHXController::AbstractRHXController(ControllerType type_, AmplifierSampleRate sampleRate_) :
     type(type_),
     sampleRate(sampleRate_),
-    pipeReadErrorCode(0)
+    pipeReadErrorCode(0),
+    waveformFifo(nullptr)
 {
     usbBufferSize = MaxNumBlocksToRead * BytesPerWord * RHXDataBlock::dataBlockSizeInWords(type, maxNumDataStreams());
     std::cout << "RHXController: Allocating " << usbBufferSize / 1.0e6 << " MBytes for USB buffer." << std::endl;

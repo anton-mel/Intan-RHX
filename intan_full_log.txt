@@ -1,0 +1,80 @@
+---- Intan Technologies ----
+
+FrontPanel DLL loaded. Version:  5.3.4
+Scanning USB for Opal Kelly devices...
+Found 1 Opal Kelly device connected.
+Pipeline controller selected - forcing demo mode even with devices connected
+Pipeline controller selected - showing advanced configuration first
+2025-08-13 11:22:29.892 IntanRHX[77492:14487102] +[IMKClient subclass]: chose IMKClient_Modern
+2025-08-13 11:22:29.892 IntanRHX[77492:14487102] +[IMKInputSession subclass]: chose IMKInputSession_Modern
+Saving pipeline controller setting: true
+Settings file location: "/Users/antonmelnychuk/Library/Preferences/com.intantech.IntanRHX.plist"
+Starting software with pipeline controller after configuration...
+Pipeline controller setting: true
+Settings file location: "/Users/antonmelnychuk/Library/Preferences/com.intantech.IntanRHX.plist"
+Creating PipelineDataRHXController
+RHXController: Allocating 16.2857 MBytes for USB buffer.
+PipelineDataRHXController created - no custom data source set initially
+Default data rate: 30000 Hz, Streams: 4 Channels per stream: 32
+PipelineDataRHXController::isSynthetic() called - returning true
+PipelineDataRHXController::isPlayback() called - returning false
+=== PIPELINE CONTROLLER OPEN ===
+This controller does NOT connect to any real device!
+Board serial number: N/A (ignored)
+All data will come from the pipeline or be empty.
+DataStreamFifo: Allocating 925.086 MBytes for FIFO buffer.
+PipelineDataRHXController::acquisitionMode() called - returning SyntheticMode
+USBDataThread: Allocating 9.59693 MBytes for USB buffer.
+=== PIPELINE CONTROLLER RUNNING ===
+This is the PipelineDataRHXController - NO DEVICE DATA will be used!
+All data will come from the pipeline or be empty if no callback is set.
+Device is connected but IGNORED - using pipeline data instead!
+Starting pipeline data pipeline...
+Attempting to connect to TCP server directly...
+Attempting to connect to TCP server on localhost:12345...
+Connected to TCP server
+Successfully connected to TCP server
+Successfully connected to TCP server
+Setting timer interval to 1 ms for 20000 Hz data rate
+Pipeline data controller started with 20000 Hz data rate
+Application should now be visible and responsive
+No data source - generating empty data block # 0
+No data source - generating empty data block # 1000
+No data source - generating empty data block # 2000
+No data source - generating empty data block # 3000
+No data source - generating empty data block # 4000
+No data source - generating empty data block # 5000
+No data source - generating empty data block # 6000
+No data source - generating empty data block # 7000
+No data source - generating empty data block # 8000
+No data source - generating empty data block # 9000
+No data source - generating empty data block # 10000
+Stopping data generation after 10000 blocks to prevent hanging
+Pipeline data controller stopped
+PipelineDataRHXController::isPlayback() called - returning false
+PipelineDataRHXController::isPlayback() called - returning false
+Elapsed time:  23  ms
+
+Device  name:  Apple M4
+Elapsed time:  879  ms
+
+Control window created, about to show it...
+Control window show() called
+Setting pipeline controller status message...
+Pipeline controller active - showing status message in UI
+=== PIPELINE CONTROLLER RUNNING ===
+This is the PipelineDataRHXController - NO DEVICE DATA will be used!
+All data will come from the pipeline or be empty if no callback is set.
+Device is connected but IGNORED - using pipeline data instead!
+Starting pipeline data pipeline...
+Setting timer interval to 1 ms for 20000 Hz data rate
+Pipeline data controller started with 20000 Hz data rate
+Application should now be visible and responsive
+Stopping data generation after 10000 blocks to prevent hanging
+Pipeline data controller stopped
+QObject::disconnect: wildcard call disconnects from destroyed signal of WaveformDisplayColumn::unnamed
+QObject::disconnect: wildcard call disconnects from destroyed signal of MultiWaveformPlot::unnamed
+WaveformFifo: Allocated 1.0698 GBytes for waveform buffers.
+WaveformFifo: Running out of space!  Consumer number 1 is not reading data quickly enough.
+WaveformFifo: Running out of space!  Consumer number 2 is not reading data quickly enough.
+WaveformFifo: Running out of space!  Consumer number 3 is not reading data quickly enough.

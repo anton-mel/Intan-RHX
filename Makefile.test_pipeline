@@ -1,0 +1,22 @@
+CXX = /Library/Developer/CommandLineTools/usr/bin/clang++
+CXXFLAGS = -std=gnu++1z -pipe -stdlib=libc++ -O2 -arch arm64 -mmacosx-version-min=14.0
+INCLUDES = -I. -IEngine/API/Synthetic -IEngine/API/Abstract -IEngine/API/Hardware
+QT_INCLUDES = -I/opt/homebrew/lib/QtCore.framework/Headers -I/opt/homebrew/lib/QtNetwork.framework/Headers
+QT_LIBS = -F/opt/homebrew/lib -framework QtCore -framework QtNetwork
+
+TARGET = test_pipeline_connection
+SOURCES = test_pipeline_connection.cpp
+OBJECTS = $(SOURCES:.cpp=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CXX) $(OBJECTS) -o $(TARGET) $(QT_LIBS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(QT_INCLUDES) -c $< -o $@
+
+clean:
+	rm -f $(OBJECTS) $(TARGET)
+
+.PHONY: all clean 

@@ -488,6 +488,17 @@ BoardSelectDialog::~BoardSelectDialog()
 // by this software (RHD USB interface board, RHD Recording Controller, or RHS Stim/Record Controller).
 bool BoardSelectDialog::validControllersPresent(QVector<ControllerInfo*> cInfo)
 {
+    // @anton: IMPORTANT
+    // Check if pipeline controller is selected - if so, force demo mode regardless of connected devices
+    QSettings settings;
+    bool usePipelineController = settings.value("rhxPipelineDataController", true).toBool();
+    
+    if (usePipelineController) {
+        qDebug() << "Pipeline controller selected - forcing demo mode even with devices connected";
+        return false; // Force demo mode
+    }
+    
+    // Normal device detection logic
     for (int i = 0; i < cInfo.size(); i++) {
         if (cInfo[i]->boardMode == RHDUSBInterfaceBoard || cInfo[i]->boardMode == RHDController ||
                 cInfo[i]->boardMode == RHSController || cInfo[i]->boardMode == RHSController_7310 ||
@@ -499,6 +510,35 @@ bool BoardSelectDialog::validControllersPresent(QVector<ControllerInfo*> cInfo)
 
 void BoardSelectDialog::showDemoMessageBox()
 {
+    // @anton: IMPORTANT
+    // Check if pipeline controller is selected - if so, show advanced configuration first
+    QSettings settings;
+    bool usePipelineController = settings.value("rhxPipelineDataController", true).toBool();
+    
+    if (usePipelineController) {
+        qDebug() << "Pipeline controller selected - showing advanced configuration first";
+        
+        // Show the advanced dialog to allow configuration
+        AdvancedStartupDialog advancedStartupDialog(useOpenCL, playbackPorts, true, this);
+        advancedStartupDialog.exec();
+        
+        // After configuration, start with pipeline controller
+        AmplifierSampleRate sampleRate = SampleRate20000Hz;
+        StimStepSize stimStepSize = StimStepSize500nA;
+        ControllerType controllerType = ControllerRecordUSB3; // Default to USB3 controller type
+        
+        qDebug() << "Starting software with pipeline controller after configuration...";
+        splash->show();
+        splash->showMessage(splashMessage, splashMessageAlign, splashMessageColor);
+        
+        startSoftware(controllerType, sampleRate, stimStepSize, 8, true, "N/A", SyntheticMode, false);
+        
+        splash->finish(controlWindow);
+        accept();
+        return;
+    }
+    
+    // Normal demo dialog flow
     AmplifierSampleRate sampleRate = SampleRate20000Hz;
     StimStepSize stimStepSize = StimStepSize500nA;
     bool rememberSettings = false;
@@ -631,7 +671,21 @@ void BoardSelectDialog::startSoftware(ControllerType controllerType, AmplifierSa
     if (mode == LiveMode) {
         rhxController = new RHXController(controllerType, sampleRate, is7310);
     } else if (mode == SyntheticMode) {
-        rhxController = new SyntheticRHXController(controllerType, sampleRate);
+        // Check if pipeline data controller is selected
+        QSettings settings;
+        bool usePipelineController = settings.value("rhxPipelineDataController", true).toBool();
+        
+        // Debug output
+        qDebug() << "Pipeline controller setting:" << usePipelineController;
+        qDebug() << "Settings file location:" << settings.fileName();
+        
+        if (usePipelineController) {
+            qDebug() << "Creating PipelineDataRHXController";
+            rhxController = new PipelineDataRHXController(controllerType, sampleRate);
+        } else {
+            qDebug() << "Creating SyntheticRHXController";
+            rhxController = new SyntheticRHXController(controllerType, sampleRate);
+        }
     } else if (mode == PlaybackMode) {
         rhxController = new PlaybackRHXController(controllerType, sampleRate, dataFileReader);
     } else {
@@ -652,6 +706,8 @@ void BoardSelectDialog::startSoftware(ControllerType controllerType, AmplifierSa
     parser = new CommandParser(state, controllerInterface, this);
     controlWindow = new ControlWindow(state, parser, controllerInterface, rhxController);
     parser->controlWindow = controlWindow;
+    
+    qDebug() << "Control window created, about to show it...";
 
     connect(controlWindow, SIGNAL(sendExecuteCommand(QString)), parser, SLOT(executeCommandSlot(QString)));
     connect(controlWindow, SIGNAL(sendExecuteCommandWithParameter(QString,QString)), parser, SLOT(executeCommandWithParameterSlot(QString,QString)));
@@ -693,6 +749,19 @@ void BoardSelectDialog::startSoftware(ControllerType controllerType, AmplifierSa
     connect(controllerInterface->saveThread(), SIGNAL(error(QString)), controlWindow, SLOT(queueErrorMessage(QString)));
 
     controlWindow->show();
+    
+    qDebug() << "Control window show() called";
+
+    // Show pipeline controller status if it's active
+    if (mode == SyntheticMode) {
+        QSettings settings;
+        bool usePipelineController = settings.value("rhxPipelineDataController", true).toBool();
+        if (usePipelineController) {
+            qDebug() << "Setting pipeline controller status message...";
+            emit controlWindow->setStatusBarText("Pipeline Data Controller Active - Device data ignored, using pipeline data instead");
+            qDebug() << "Pipeline controller active - showing status message in UI";
+        }
+    }
 
     settings.beginGroup(ControllerTypeSettingsGroup[(int)state->getControllerTypeEnum()]);
     if (defaultSettingsFileCheckBox->isChecked()) {
